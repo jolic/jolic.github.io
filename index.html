@@ -1,13 +1,244 @@
 <!DOCTYPE html>
 <html>
-<body>
-<h1>Hello World</h1>
-<p>I'm hosted with GitHub Pages.</p>
-<p>
-<a href="http://jolic.github.io">http://jolic.github.io</a>
-</p>
-<p>
-<a href="https://jolic.github.io">https://jolic.github.io</a>
-</p>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>jolic.github.io | Playground and demos</title>
+<link rel="stylesheet" type="text/css" href="semantic.io/semantic.css">
+<link rel="stylesheet" type="text/css" href="assets/css/style.css">
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.js"></script>
+<script src="semantic.io/semantic.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="assets/ieSucks/ieSucks.js"></script>
+</head>
+<body id="home">
+	<div class="ui inverted masthead segment">
+		<div class="ui page grid">
+			<div class="column">
+				<div class="ui inverted blue menu">
+					<div class="header item"><a href="https://jolic.github.io">jolic.github.io</a></div>
+					<div class="right menu">
+						<div class="ui mobile dropdown link item">
+							Menu
+							<i class="dropdown icon"></i>
+							<div class="menu">
+								<a class="item" href="#vivus">Vivus patch</a>
+								<a class="item" href="#iesucks">ieSucks</a>
+							</div>
+						</div>
+						<div class="ui dropdown link item">
+							Projects / patches @ <i class="github icon small"></i>
+							<i class="dropdown icon"></i>
+							<div class="menu">
+								<a class="item" href="https://github.com/jolic/vivus/tree/master/_PATCH">Patch for Vivus</a>
+								<a class="item" href="https://github.com/jolic/ieSucks">ieSucks</a>
+							</div>
+						</div>
+						<a class="item" href="https://github.com/jolic"><i class="github icon"></i></a>
+					</div>
+				</div>
+				<img src="assets/gfx/teaser.jpg" class="ui medium image">
+				<div class="ui hidden transition information">
+					<h1 class="ui inverted header">
+						There are a thousand no’s<br>for every yes
+					</h1>
+					<h3>How true.</h3>
+					<div class="large basic inverted animated fade ui button">
+						<div class="visible content">See the entry video from Apple WWDC13</div>
+						<div class="hidden content"><a href="https://www.youtube.com/watch?v=VpZmIiIXuZ0" target="_blank">@ youtube</a></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="ui vertical feature segment">
+		<div class="ui centered page grid">
+			<div class="four wide column">
+					<div class="ui vertical menu">
+					  <div class="item">
+						<a><b>Demos</b></a>
+						<div class="menu">
+						  <a class="item" href="#vivus">Vivus patch</a>
+						  <a class="item" href="#iesucks">ieSucks</a>
+						</div>
+					  </div>
+					</div>
+
+			</div>
+			<div class="one wide column">
+			</div>		
+			<div class="nine wide column">
+					<h1>Playground and demos</h1>
+					<h2 class="ui dividing header">Vivus patch<a class="anchor" id="vivus"></a></h2>
+					<p>
+					Vivus is a very nice and small javascript class that allows you to animate SVG’s, giving them the appearence of being drawn. See the original project <a href="http://maxwellito.github.io/vivus/">here</a>.
+					<br>
+					<br>
+					As the original class allows only to be used on SVG elements that are placed inside the html I've written a patch where the SVG can be placed inside an <code>&lt;object&gt;</code> which can be accessed and controlled with javascript.
+					<br>
+					<br>
+					Press the ”Play” button.
+					</p>
+					<div class="ui ignored message">
+
+						<div class="ui two column middle aligned relaxed fitted stackable grid">
+
+							<div class="column">
+
+								<object id="svg" style="background:#ddd;" type="image/svg+xml" data="assets/svg/lens-with-external-vivus.svg" >Your browser does not support SVG</object>
+								<script type="text/javascript">
+									var svgDOM = null;
+									var $buttons={
+										 vivus_play		:null
+										,vivus_pause	:null
+										,vivus_replay	:null
+										,vivus_rewind	:null
+										,vivus_color	:null
+										,vivus_rewindonebyone:null
+									};
+									var $hexcolorElm = null;
+									var getRandomColor = function(){
+										var hexColorAsString = '#'+Math.floor(Math.random()*16777215).toString(16);
+										$hexcolorElm.html(hexColorAsString);
+										return hexColorAsString;
+									};
+									var action=function(action){
+										if ( null === svgDOM ) {
+											alert('No SVG available!');
+											return;
+										}
+										switch (action){
+											case 'ready':
+												$buttons['vivus_play'].removeClass('disabled');
+												$buttons['vivus_rewindonebyone'].removeClass('disabled');
+												break;
+											case 'play':
+												$buttons['vivus_'+action].addClass('disabled');
+												$buttons['vivus_rewindonebyone'].addClass('disabled');
+												svgDOM.Vivus.setType('delayed').play();
+												break;
+											case 'pause':
+												$buttons['vivus_play'].removeClass('disabled');
+												svgDOM.Vivus.stop();
+												break;
+											case 'replay':
+												$buttons['vivus_play'].addClass('disabled');
+												svgDOM.Vivus.reset().play(1);
+												break;
+											case 'rewind':
+												$buttons['vivus_play'].removeClass('disabled');
+												svgDOM.Vivus.play(-3);
+												break;
+											case 'rewindonebyone':
+												$buttons['vivus_play'].removeClass('disabled');
+												svgDOM.Vivus.setType('oneByOne').play(-2);
+												break;
+											case 'color':
+												svgDOM.Vivus.setStrokeColor( getRandomColor() );
+												break;
+											default:
+										}
+									};
+									$(function(){
+										for ( var i in $buttons ) {
+											$buttons[i] = $('#'+i).on('click',function(e){
+												action( $(this).attr('id').split('_')[1] );
+											});
+										}
+										$hexcolorElm = $('#hexcolor');
+									});
+									var vivusCallback = function(_vivusClass){
+										action('ready');
+									};
+									document.getElementById('svg').addEventListener('load', function(e){
+										svgDOM = e.target.contentDocument;
+										svgDOM.Vivus.setCallback( vivusCallback );
+									}, false);
+								</script>
+
+
+							</div>
+							<div class="ui vertical divider doubling">
+								<i class="chevron left icon"></i>
+							</div>
+							<div class="center aligned column">
+								<div class="ui buttons vertical labeled icon">
+									<div class="ui button" id="vivus_play"><i class="play icon"></i> Play</div>
+									<div class="ui button" id="vivus_pause"><i class="pause icon"></i> Pause</div>
+									<div class="ui button" id="vivus_replay"><i class="fast backward icon"></i> Replay</div>
+									<div class="ui button" id="vivus_rewind"><i class="backward icon"></i> Rewind</div>
+									<div class="ui button" id="vivus_rewindonebyone"><i class="backward icon"></i> Rewind with "oneByOne"</div>
+									<div class="ui button" id="vivus_color"><i class="options icon"></i> Random stroke color</div>
+								</div>
+								<div id="hexcolor" style="margin-top:10px;"># no random color</div>
+							</div>
+						</div>
+					</div>
+					<p>It's quite easy to use.</p>
+					<div class="blue column">
+						<div class="ui blue segment">
+							<a class="ui blue ribbon label">object</a>
+							<span>
+							</span>
+							<p class="ui ignored message">
+								<code>&lt;object id="svg" style="background:#ddd;" type="image/svg+xml" data="assets/svg/lens-with-external-vivus.svg"&gt;Your browser does not support SVG&lt;/object&gt;</code>
+							</p>
+							<a class="ui teal ribbon label">javascript</a>
+							<p class="ui ignored message"><code>
+							document.getElementById('svg').addEventListener('load', function(e){
+							svgDOM = e.target.contentDocument;
+							svgDOM.Vivus.setCallback( vivusCallback );
+							}, false);
+							</code>
+							</p>
+						</div>
+					</div>
+					<br>
+					<p>
+					Look at the source, especially the svg file.
+					<br>
+					The SVG was taken from the examples at <a href="http://maxwellito.github.io/vivus/">Vivus</a> and changed.
+					</p>
+					<br>
+					<h2 class="ui dividing header">ieSucks<a class="anchor" id="iesucks"></a></h2>
+					<p>
+					This ia an old project from 2010. I wrote this in a time when eveything you made on a website has to be "pixelperfect" (>= IE 6) and took days or months longer (and got more grey hairs).
+					</p>
+
+					<p id="ieSucks" class="ui ignored message" style="height:350px;">
+					Click on the<br>”Why” button.
+					<script type="text/javascript">
+					$('#ieSucks').ieSucks({
+						 showAlsoIfBrowserIsNotIE	:true
+						,showAtOnce					:false
+						,imgPath					:'assets/ieSucks/gfx'
+					});
+					</script>
+					</p>
+					<p></p>
+			</div>
+		</div>
+	</div>
+
+	<div class="ui footer vertical segment">
+		<div class="ui stackable center aligned page grid">
+			<div class="ten wide column">
+				<div class="ui three column center aligned stackable grid">
+					<div class="column">
+					</div>
+					<div class="column">
+					</div>
+					<div class="column">
+					</div>
+				</div>
+			</div>
+			<div class="six wide column">
+			</div>
+		</div>
+	</div>
+<script type="text/javascript">(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create', 'UA-59951623-1', 'auto');ga('send', 'pageview');</script>
 </body>
+
 </html>
