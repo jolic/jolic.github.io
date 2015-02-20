@@ -220,11 +220,25 @@
 					<br>
 					<h2 class="ui dividing header">ieSucks<a class="anchor" id="iesucks"></a></h2>
 					<p>
-					This ia an old project from 2009. I wrote this in a time when eveything you made on a website has to be "pixelperfect" (>= IE 6) and took days or months longer (and got more grey hairs).
+					This ia an old project from 2009. I wrote this jQuery plugin in a time when eveything you made on a website has to be "pixelperfect" (>= IE 6) and took days or months longer (and got more grey hairs).
 					</p>
 
 					<p id="ieSucks" class="ui ignored message" style="height:350px;">
 					Click on the<br>”Why” button.
+					<div class="ui blue segment">
+						<a class="ui blue ribbon label">javascript</a>
+						<span>
+<pre class="language-javascript" rel="css"><code class="language-javascript">
+	...
+	$('#ieSucks').ieSucks({
+		 showAlsoIfBrowserIsNotIE	:true
+		,showAtOnce					:false
+		,imgPath					:'assets/ieSucks/gfx'
+	});
+	...
+</code></pre>
+						</span>
+					</div>
 					<script type="text/javascript">
 					$('#ieSucks').ieSucks({
 						 showAlsoIfBrowserIsNotIE	:true
